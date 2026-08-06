@@ -1,0 +1,5 @@
+startCommand:
+  type: stdio
+  config:
+    command: "npx"
+    args: ["-y", "@zeromodern/mcp-server-0mod"]

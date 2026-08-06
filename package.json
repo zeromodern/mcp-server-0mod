@@ -1,0 +1,29 @@
+{
+  "name": "@zeromodern/mcp-server-0mod",
+  "version": "1.0.0",
+  "description": "MCP server wrapping 0mod HTTP 402 API Gateway (stealth-dom, airgap-scrub, rag-shrink, code-denoise, domain-check, dex-price, x-sentiment, image-ocr)",
+  "main": "build/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "start": "node build/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "smithery",
+    "x402",
+    "0mod",
+    "ai-tools"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.1",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
