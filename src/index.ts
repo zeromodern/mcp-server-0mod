@@ -1,16 +1,46 @@
+import { createRequire } from "node:module";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
+import { x402Client } from "@x402/core/client";
+import { registerExactEvmScheme } from "@x402/evm/exact/client";
+import { wrapFetchWithPayment } from "@x402/fetch";
+import { privateKeyToAccount } from "viem/accounts";
+
+const require = createRequire(import.meta.url);
+const pkg = require("../package.json");
 
 const GATEWAY = "https://api.0mod.com/api/v1";
 
+let cachedFetchClient: typeof fetch | null = null;
+
+function getFetchClient(): typeof fetch {
+  if (cachedFetchClient) return cachedFetchClient;
+  const pkey = process.env.PAYER_PRIVATE_KEY || process.env.EVM_PRIVATE_KEY || process.env.X402_PRIVATE_KEY;
+  if (!pkey) {
+    cachedFetchClient = fetch;
+    return fetch;
+  }
+  try {
+    const client = new x402Client();
+    const formattedKey = (pkey.startsWith("0x") ? pkey : `0x${pkey}`) as `0x${string}`;
+    registerExactEvmScheme(client, { signer: privateKeyToAccount(formattedKey) });
+    cachedFetchClient = wrapFetchWithPayment(fetch, client);
+    return cachedFetchClient;
+  } catch (err) {
+    console.error("Failed to initialize x402 auto-payment client:", err);
+    cachedFetchClient = fetch;
+    return fetch;
+  }
+}
+
 const server = new Server(
   {
-    name: "0mod-gateway-mcp",
-    version: "1.0.0",
+    name: "@zeromodern/mcp-server-0mod",
+    version: pkg.version,
   },
   {
     capabilities: {
@@ -182,7 +212,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 
   try {
-    const response = await fetch(targetUrl, {
+    const fetchFn = getFetchClient();
+    const response = await fetchFn(targetUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(args || {}),
