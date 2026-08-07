@@ -1,9 +1,15 @@
 {
   "name": "@zeromodern/mcp-server-0mod",
-  "version": "1.0.0",
-  "description": "MCP server wrapping 0mod HTTP 402 API Gateway (stealth-dom, airgap-scrub, rag-shrink, code-denoise, domain-check, dex-price, x-sentiment, image-ocr)",
+  "version": "1.1.0",
+  "description": "MCP server wrapping the 0mod API Gateway for any AI agent",
   "main": "build/index.js",
   "type": "module",
+  "files": [
+    "build"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
@@ -17,7 +23,7 @@
     "0mod",
     "ai-tools"
   ],
-  "author": "",
+  "author": "0mod <https://api.0mod.com>",
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.1",

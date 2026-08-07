@@ -111,6 +111,51 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ["imageUrl"],
         },
       },
+      {
+        name: "embed_text",
+        description: "Generates 768-dimensional dense vector embeddings for RAG & semantic search via BAAI BGE-Base",
+        inputSchema: {
+          type: "object",
+          properties: {
+            text: {
+              oneOf: [
+                { type: "string", description: "Single text string to embed" },
+                { type: "array", items: { type: "string" }, description: "Array of text strings to embed" },
+              ],
+            },
+          },
+          required: ["text"],
+        },
+      },
+      {
+        name: "embed_multilingual",
+        description: "Generates 1024-dimensional dense vector embeddings for multilingual & long text via BAAI BGE-Large",
+        inputSchema: {
+          type: "object",
+          properties: {
+            text: {
+              oneOf: [
+                { type: "string", description: "Single text string to embed" },
+                { type: "array", items: { type: "string" }, description: "Array of text strings to embed" },
+              ],
+            },
+          },
+          required: ["text"],
+        },
+      },
+      {
+        name: "summarize_text",
+        description: "Executive TL;DR text summarizer producing structured bullet points via Workers AI Llama 3.1",
+        inputSchema: {
+          type: "object",
+          properties: {
+            text: { type: "string", description: "Source text payload to summarize" },
+            format: { type: "string", enum: ["bullets", "paragraph", "executive"], description: "Summary output format style" },
+            maxLength: { type: "number", description: "Target word count limit" },
+          },
+          required: ["text"],
+        },
+      },
     ],
   };
 });
@@ -126,6 +171,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     dex_price_summary: `${GATEWAY}/dex-price-summary`,
     x_sentiment: `${GATEWAY}/x-sentiment`,
     image_ocr_shrink: `${GATEWAY}/image-ocr-shrink`,
+    embed_text: `${GATEWAY}/embed-text`,
+    embed_multilingual: `${GATEWAY}/embed-multilingual`,
+    summarize_text: `${GATEWAY}/summarize`,
   };
 
   const targetUrl = endpointMap[name];
@@ -133,21 +181,89 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     throw new Error(`Unknown tool: ${name}`);
   }
 
-  const response = await fetch(targetUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(args),
-  });
+  try {
+    const response = await fetch(targetUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(args || {}),
+    });
 
-  const data = await response.json();
-  return {
-    content: [
-      {
-        type: "text",
-        text: JSON.stringify(data, null, 2),
-      },
-    ],
-  };
+    if (response.status === 402) {
+      let paymentInfo: any = {};
+      const paymentHeader = response.headers.get("payment-required") || response.headers.get("x-payment-response");
+      try {
+        paymentInfo = await response.json();
+      } catch {
+        paymentInfo = { raw: await response.text() };
+      }
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(
+              {
+                error: true,
+                status: 402,
+                message: "HTTP 402 Payment Required — x402 payment verification required",
+                paymentHeader,
+                paymentRequirements: paymentInfo,
+              },
+              null,
+              2
+            ),
+          },
+        ],
+      };
+    }
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(
+              {
+                error: true,
+                status: response.status,
+                message: `Gateway call failed with status ${response.status}`,
+                details: errorText.slice(0, 500),
+              },
+              null,
+              2
+            ),
+          },
+        ],
+      };
+    }
+
+    const data = await response.json();
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(data, null, 2),
+        },
+      ],
+    };
+  } catch (error: any) {
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(
+            {
+              error: true,
+              message: "Network request to gateway failed",
+              details: error?.message || String(error),
+            },
+            null,
+            2
+          ),
+        },
+      ],
+    };
+  }
 });
 
 async function main() {
