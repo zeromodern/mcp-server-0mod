@@ -186,6 +186,67 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ["text"],
         },
       },
+      {
+        name: "crypto_coverage",
+        description: "Check data coverage, supported pairs, and date boundaries for crypto telemetry",
+        inputSchema: {
+          type: "object",
+          properties: {
+            pair: { type: "string", description: "Optional token pair filter (e.g. AERO/USD)" },
+          },
+        },
+      },
+      {
+        name: "crypto_spread_candles",
+        description: "Fetch cross-venue CEX-DEX spread candles (OHLC) for a token pair",
+        inputSchema: {
+          type: "object",
+          properties: {
+            pair: { type: "string", description: "Token pair (e.g. AERO/USD)" },
+            date: { type: "string", description: "Date in YYYY-MM-DD format" },
+            time: { type: "string", description: "Time slice in HHMM format (default 0000)" },
+            interval: { type: "string", description: "Candle interval (default 15m)" },
+          },
+          required: ["pair"],
+        },
+      },
+      {
+        name: "crypto_dislocations",
+        description: "Fetch cross-venue market dislocation and spread arbitrage events for a token pair",
+        inputSchema: {
+          type: "object",
+          properties: {
+            pair: { type: "string", description: "Token pair (e.g. AERO/USD)" },
+            date: { type: "string", description: "Date in YYYY-MM-DD format" },
+            time: { type: "string", description: "Time slice in HHMM format (default 0000)" },
+          },
+          required: ["pair"],
+        },
+      },
+      {
+        name: "crypto_execution_latency",
+        description: "Benchmark cross-venue execution speed, venue latencies, and fill rates",
+        inputSchema: {
+          type: "object",
+          properties: {
+            date: { type: "string", description: "Date in YYYY-MM-DD format" },
+            time: { type: "string", description: "Time slice in HHMM format (default 0000)" },
+            venue: { type: "string", description: "Optional venue filter (coinbase | base_dex)" },
+          },
+        },
+      },
+      {
+        name: "crypto_shadow_capacity",
+        description: "Measure uncaptured arbitrage volume capacity and capital constraint metrics",
+        inputSchema: {
+          type: "object",
+          properties: {
+            date: { type: "string", description: "Date in YYYY-MM-DD format" },
+            time: { type: "string", description: "Time slice in HHMM format (default 0000)" },
+            pair: { type: "string", description: "Optional token pair filter" },
+          },
+        },
+      },
     ],
   };
 });
@@ -204,6 +265,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     embed_text: `${GATEWAY}/embed-text`,
     embed_multilingual: `${GATEWAY}/embed-multilingual`,
     summarize_text: `${GATEWAY}/summarize`,
+    crypto_coverage: `${GATEWAY}/crypto/coverage`,
+    crypto_spread_candles: `${GATEWAY}/crypto/spread-candles`,
+    crypto_dislocations: `${GATEWAY}/crypto/dislocations`,
+    crypto_execution_latency: `${GATEWAY}/crypto/execution-latency`,
+    crypto_shadow_capacity: `${GATEWAY}/crypto/shadow-capacity`,
   };
 
   const targetUrl = endpointMap[name];

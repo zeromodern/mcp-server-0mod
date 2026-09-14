@@ -52,6 +52,13 @@ Run directly via `npx`:
 PAYER_PRIVATE_KEY=0x_your_private_key_here npx -y @zeromodern/mcp-server-0mod
 ```
 
+## Practical Real-World Example: Claude / Cursor Institutional Feed Client
+
+Connect Claude Desktop, Cursor, or autonomous AI agents directly to institutional-grade execution telemetry without signing a $1,000/month enterprise data contract.
+
+See [`examples/institutional_feed_client.ts`](./examples/institutional_feed_client.ts) for a full runnable script connecting via stdio and querying cross-venue latency and capacity metrics.
+
+
 ## Available Tools
 
 > 💡 **Pricing**: For live per-call pricing and endpoint status across all tools, visit [api.0mod.com](https://api.0mod.com) or fetch `https://api.0mod.com/api/v1/discovery`.
@@ -69,6 +76,11 @@ PAYER_PRIVATE_KEY=0x_your_private_key_here npx -y @zeromodern/mcp-server-0mod
 | `embed_text` | 768-dim text embedding generation | `{ "text": "sample text" }` |
 | `embed_multilingual` | 1024-dim multilingual text embedding generation | `{ "text": "sample text" }` |
 | `summarize_text` | Executive TL;DR document summarization | `{ "text": "long text string" }` |
+| `crypto_coverage` | Check data coverage, supported pairs, and date boundaries | `{ "pair": "AERO/USD" }` |
+| `crypto_spread_candles` | Fetch cross-venue CEX-DEX spread candles (OHLC) | `{ "pair": "AERO/USD", "date": "2026-09-14" }` |
+| `crypto_dislocations` | Fetch cross-venue market dislocation and spread arbitrage events | `{ "pair": "AERO/USD", "date": "2026-09-14" }` |
+| `crypto_execution_latency` | Benchmark cross-venue execution speed, venue latencies, and fill rates | `{ "date": "2026-09-14" }` |
+| `crypto_shadow_capacity` | Measure uncaptured arbitrage volume capacity and capital constraint metrics | `{ "date": "2026-09-14" }` |
 
 ## Ecosystem Packages
 
