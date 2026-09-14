@@ -54,7 +54,7 @@ PAYER_PRIVATE_KEY=0x_your_private_key_here npx -y @zeromodern/mcp-server-0mod
 
 ## Practical Real-World Example: Claude / Cursor Institutional Feed Client
 
-Connect Claude Desktop, Cursor, or autonomous AI agents directly to institutional-grade execution telemetry without signing a $1,000/month enterprise data contract.
+Connect Claude Desktop, Cursor, or autonomous AI agents directly to institutional-grade execution telemetry without signing a $1,000/month enterprise data contract. Per-call pricing is dynamically settled via HTTP 402 on Base (see [api.0mod.com](https://api.0mod.com) for live endpoint pricing).
 
 See [`examples/institutional_feed_client.ts`](./examples/institutional_feed_client.ts) for a full runnable script connecting via stdio and querying cross-venue latency and capacity metrics.
 

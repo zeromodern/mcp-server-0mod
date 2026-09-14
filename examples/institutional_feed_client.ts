@@ -10,10 +10,10 @@
  * This script demonstrates connecting to @zeromodern/mcp-server-0mod as an MCP client.
  * The AI agent can autonomously invoke crypto telemetry tools:
  *   - crypto_coverage (Free discovery)
- *   - crypto_spread_candles ($0.015 USDC)
- *   - crypto_execution_latency ($0.075 USDC)
- *   - crypto_shadow_capacity ($0.150 USDC)
- * Each tool call is automatically settled over HTTP 402 via the client's Base wallet.
+ *   - crypto_spread_candles
+ *   - crypto_execution_latency
+ *   - crypto_shadow_capacity
+ * Each tool call is automatically settled over HTTP 402 via the client's Base wallet (rates at api.0mod.com).
  *
  * Prerequisites:
  *   npm install @modelcontextprotocol/sdk
@@ -62,8 +62,8 @@ async function runMcpInstitutionalFeed() {
   });
   console.log("Result:", JSON.stringify(coverageResult, null, 2));
 
-  // 3. Call crypto_execution_latency ($0.075 USDC)
-  console.log("\n[Tool Call] crypto_execution_latency ($0.075 USDC)...");
+  // 3. Call crypto_execution_latency
+  console.log("\n[Tool Call] crypto_execution_latency...");
   const latencyResult = await client.callTool({
     name: "crypto_execution_latency",
     arguments: {
@@ -73,8 +73,8 @@ async function runMcpInstitutionalFeed() {
   });
   console.log("Result:", JSON.stringify(latencyResult, null, 2));
 
-  // 4. Call crypto_shadow_capacity ($0.150 USDC)
-  console.log("\n[Tool Call] crypto_shadow_capacity ($0.150 USDC)...");
+  // 4. Call crypto_shadow_capacity
+  console.log("\n[Tool Call] crypto_shadow_capacity...");
   const capacityResult = await client.callTool({
     name: "crypto_shadow_capacity",
     arguments: {
