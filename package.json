@@ -3,6 +3,17 @@
   "version": "1.4.0",
   "description": "MCP server wrapping the 0mod API Gateway for any AI agent",
   "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "default": "./build/index.js"
+    }
+  },
+  "bin": {
+    "mcp-server-0mod": "build/index.js"
+  },
+  "mcpName": "io.github.zeromodern/mcp-server-0mod",
   "type": "module",
   "files": [
     "build"
@@ -10,10 +21,19 @@
   "publishConfig": {
     "access": "public"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeromodern/mcp-server-0mod.git"
+  },
+  "homepage": "https://github.com/zeromodern/mcp-server-0mod#readme",
+  "bugs": {
+    "url": "https://github.com/zeromodern/mcp-server-0mod/issues"
+  },
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
-    "start": "node build/index.js"
+    "start": "node build/index.js",
+    "release": "semantic-release"
   },
   "keywords": [
     "mcp",
@@ -34,7 +54,14 @@
     "zod": "^3.22.0"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.0",
+    "@semantic-release/npm": "^12.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.1",
     "@types/node": "^20.19.43",
+    "semantic-release": "^24.2.0",
     "typescript": "^5.0.0"
   }
 }

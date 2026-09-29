@@ -1,8 +1,22 @@
-name: Publish Package to NPM
+name: Publish Package to NPM (Manual Fallback)
 
+# MANUAL FALLBACK ONLY.
+#
+# Automated releases are handled by `.github/workflows/release.yml`
+# (semantic-release), which computes the next version, writes the CHANGELOG,
+# publishes to npm with provenance, and creates the `vX.Y.Z` tag + GitHub Release.
+#
+# This workflow is retained for emergency/manual republishing of an already-tagged
+# version (e.g. if `@semantic-release/npm` failed mid-run). It is intentionally NOT
+# wired to `release: published` or `push: tags` to guarantee a single npm publisher
+# and avoid double-publishing the same version.
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Git ref (tag/branch) to publish from'
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -14,6 +28,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

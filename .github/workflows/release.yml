@@ -1,0 +1,62 @@
+name: Release
+
+# Automated semantic release on every push to the default branch.
+#
+# Flow:
+#   1. Analyse Conventional Commits since the last `v*` tag.
+#   2. Determine the next SEMVER version (fix -> patch, feat -> minor, BREAKING CHANGE -> major).
+#   3. Update CHANGELOG.md + package.json/package-lock.json version.
+#   4. Publish the package to npm (with provenance) via @semantic-release/npm.
+#   5. Create the `vX.Y.Z` git tag + GitHub Release via @semantic-release/github.
+#   6. Commit CHANGELOG/version bump back to the branch via @semantic-release/git.
+#
+# NOTE: @semantic-release/npm owns the npm publish. The legacy
+# `.github/workflows/publish.yml` is now a manual (workflow_dispatch) fallback only,
+# so the same version is never published twice. This also sidesteps GitHub's rule
+# that events triggered by the default GITHUB_TOKEN do not re-trigger workflows
+# (a tag/release created by semantic-release would not fire a `push`/`release`
+# triggered publisher anyway).
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    # Skip the version-bump commit pushed back by @semantic-release/git.
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+
+      - name: Release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
