@@ -186,6 +186,107 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ["text"],
         },
       },
+      {
+        name: "crypto_coverage",
+        description: "Check data coverage, supported pairs, and date boundaries for crypto telemetry",
+        inputSchema: {
+          type: "object",
+          properties: {
+            pair: { type: "string", description: "Optional token pair filter (e.g. AERO/USD)" },
+          },
+        },
+      },
+      {
+        name: "crypto_spread_candles",
+        description: "Fetch cross-venue CEX-DEX spread candles (OHLC) for a token pair",
+        inputSchema: {
+          type: "object",
+          properties: {
+            pair: { type: "string", description: "Token pair (e.g. AERO/USD)" },
+            date: { type: "string", description: "Date in YYYY-MM-DD format" },
+            time: { type: "string", description: "Time slice in HHMM format (default 0000)" },
+            interval: { type: "string", description: "Candle interval (default 15m)" },
+          },
+          required: ["pair"],
+        },
+      },
+      {
+        name: "crypto_dislocations",
+        description: "Fetch cross-venue market dislocation and spread arbitrage events for a token pair",
+        inputSchema: {
+          type: "object",
+          properties: {
+            pair: { type: "string", description: "Token pair (e.g. AERO/USD)" },
+            date: { type: "string", description: "Date in YYYY-MM-DD format" },
+            time: { type: "string", description: "Time slice in HHMM format (default 0000)" },
+          },
+          required: ["pair"],
+        },
+      },
+      {
+        name: "crypto_execution_latency",
+        description: "Benchmark cross-venue execution speed, venue latencies, and fill rates",
+        inputSchema: {
+          type: "object",
+          properties: {
+            date: { type: "string", description: "Date in YYYY-MM-DD format" },
+            time: { type: "string", description: "Time slice in HHMM format (default 0000)" },
+            venue: { type: "string", description: "Optional venue filter (coinbase | base_dex)" },
+          },
+        },
+      },
+      {
+        name: "crypto_shadow_capacity",
+        description: "Measure uncaptured arbitrage volume capacity and capital constraint metrics",
+        inputSchema: {
+          type: "object",
+          properties: {
+            date: { type: "string", description: "Date in YYYY-MM-DD format" },
+            time: { type: "string", description: "Time slice in HHMM format (default 0000)" },
+            pair: { type: "string", description: "Optional token pair filter" },
+          },
+        },
+      },
+      {
+        name: "crypto_labeled_dislocations",
+        description: "Fetch labeled dislocation events with execution-quality annotations (status_v2, sim_net_bps, dex_fee_embedded) from the cexdex labeler v2 pipeline",
+        inputSchema: {
+          type: "object",
+          properties: {
+            pair: { type: "string", description: "Token pair (e.g. AERO/USD)" },
+            date: { type: "string", description: "Date in YYYY-MM-DD format" },
+            time: { type: "string", description: "Time slice in HHMM format (default 0000)" },
+          },
+          required: ["pair"],
+        },
+      },
+      {
+        name: "crypto_attributed_executions",
+        description: "Fetch per-arm attributed execution observations (realized_net_usd, volume_usd, fills, belt_cost) from the realized trade_executions ledger",
+        inputSchema: {
+          type: "object",
+          properties: {
+            pair: { type: "string", description: "Token pair (e.g. AERO/USD)" },
+            date: { type: "string", description: "Date in YYYY-MM-DD format" },
+            time: { type: "string", description: "Time slice in HHMM format (default 0000)" },
+          },
+          required: ["pair"],
+        },
+      },
+      {
+        name: "crypto_impact_simulation",
+        description: "Pre-trade impact simulation against the live L2 book: expected fill price (VWAP), slippage (bps), fillable size, and fill-probability estimates. Read-only PAPER simulation — no order is placed.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            pair: { type: "string", description: "Token pair (e.g. AERO/USD or AERO-USD)" },
+            side: { type: "string", enum: ["buy", "sell"], description: "Order side: buy | sell" },
+            size_usd: { type: "number", description: "Order notional in USD (provide this OR size_base)" },
+            size_base: { type: "number", description: "Order size in base units (provide this OR size_usd)" },
+          },
+          required: ["pair", "side"],
+        },
+      },
     ],
   };
 });
@@ -204,6 +305,14 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     embed_text: `${GATEWAY}/embed-text`,
     embed_multilingual: `${GATEWAY}/embed-multilingual`,
     summarize_text: `${GATEWAY}/summarize`,
+    crypto_coverage: `${GATEWAY}/crypto/coverage`,
+    crypto_spread_candles: `${GATEWAY}/crypto/spread-candles`,
+    crypto_dislocations: `${GATEWAY}/crypto/dislocations`,
+    crypto_execution_latency: `${GATEWAY}/crypto/execution-latency`,
+    crypto_shadow_capacity: `${GATEWAY}/crypto/shadow-capacity`,
+    crypto_labeled_dislocations: `${GATEWAY}/crypto/labeled-dislocations`,
+    crypto_attributed_executions: `${GATEWAY}/crypto/attributed-executions`,
+    crypto_impact_simulation: `${GATEWAY}/crypto/impact-simulation`,
   };
 
   const targetUrl = endpointMap[name];
