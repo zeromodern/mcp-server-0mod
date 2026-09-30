@@ -75,29 +75,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         },
       },
       {
-        name: "rag_shrink",
-        description: "Compress raw HTML to clean markdown & headings for RAG context windows",
-        inputSchema: {
-          type: "object",
-          properties: {
-            html: { type: "string", description: "Raw HTML content to parse" },
-          },
-          required: ["html"],
-        },
-      },
-      {
-        name: "code_denoise",
-        description: "Strip comments, docstrings, whitespace, and sourcemaps from code files",
-        inputSchema: {
-          type: "object",
-          properties: {
-            code: { type: "string", description: "Code content to clean" },
-            language: { type: "string", description: "Programming language" },
-          },
-          required: ["code"],
-        },
-      },
-      {
         name: "domain_check",
         description: "Query global RDAP registry from edge for domain availability and WHOIS status",
         inputSchema: {
@@ -120,17 +97,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         },
       },
       {
-        name: "x_sentiment",
-        description: "Analyze market & social sentiment for topics/tokens using Workers AI Llama 3.1",
-        inputSchema: {
-          type: "object",
-          properties: {
-            topic: { type: "string", description: "Topic, ticker, or text sample to analyze" },
-          },
-          required: ["topic"],
-        },
-      },
-      {
         name: "image_ocr_shrink",
         description: "Extract clean text and table markdown from images via Workers AI Vision Llama 3.2",
         inputSchema: {
@@ -139,51 +105,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             imageUrl: { type: "string", description: "Public image URL to parse" },
           },
           required: ["imageUrl"],
-        },
-      },
-      {
-        name: "embed_text",
-        description: "Generates 768-dimensional dense vector embeddings for RAG & semantic search via BAAI BGE-Base",
-        inputSchema: {
-          type: "object",
-          properties: {
-            text: {
-              oneOf: [
-                { type: "string", description: "Single text string to embed" },
-                { type: "array", items: { type: "string" }, description: "Array of text strings to embed" },
-              ],
-            },
-          },
-          required: ["text"],
-        },
-      },
-      {
-        name: "embed_multilingual",
-        description: "Generates 1024-dimensional dense vector embeddings for multilingual & long text via BAAI BGE-Large",
-        inputSchema: {
-          type: "object",
-          properties: {
-            text: {
-              oneOf: [
-                { type: "string", description: "Single text string to embed" },
-                { type: "array", items: { type: "string" }, description: "Array of text strings to embed" },
-              ],
-            },
-          },
-          required: ["text"],
-        },
-      },
-      {
-        name: "summarize_text",
-        description: "Executive TL;DR text summarizer producing structured bullet points via Workers AI Llama 3.1",
-        inputSchema: {
-          type: "object",
-          properties: {
-            text: { type: "string", description: "Source text payload to summarize" },
-            format: { type: "string", enum: ["bullets", "paragraph", "executive"], description: "Summary output format style" },
-            maxLength: { type: "number", description: "Target word count limit" },
-          },
-          required: ["text"],
         },
       },
       {
@@ -236,44 +157,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         },
       },
       {
-        name: "crypto_shadow_capacity",
-        description: "Measure uncaptured arbitrage volume capacity and capital constraint metrics",
-        inputSchema: {
-          type: "object",
-          properties: {
-            date: { type: "string", description: "Date in YYYY-MM-DD format" },
-            time: { type: "string", description: "Time slice in HHMM format (default 0000)" },
-            pair: { type: "string", description: "Optional token pair filter" },
-          },
-        },
-      },
-      {
-        name: "crypto_labeled_dislocations",
-        description: "Fetch labeled dislocation events with execution-quality annotations (status_v2, sim_net_bps, dex_fee_embedded) from the cexdex labeler v2 pipeline",
-        inputSchema: {
-          type: "object",
-          properties: {
-            pair: { type: "string", description: "Token pair (e.g. AERO/USD)" },
-            date: { type: "string", description: "Date in YYYY-MM-DD format" },
-            time: { type: "string", description: "Time slice in HHMM format (default 0000)" },
-          },
-          required: ["pair"],
-        },
-      },
-      {
-        name: "crypto_attributed_executions",
-        description: "Fetch per-arm attributed execution observations (realized_net_usd, volume_usd, fills, belt_cost) from the realized trade_executions ledger",
-        inputSchema: {
-          type: "object",
-          properties: {
-            pair: { type: "string", description: "Token pair (e.g. AERO/USD)" },
-            date: { type: "string", description: "Date in YYYY-MM-DD format" },
-            time: { type: "string", description: "Time slice in HHMM format (default 0000)" },
-          },
-          required: ["pair"],
-        },
-      },
-      {
         name: "crypto_impact_simulation",
         description: "Pre-trade impact simulation against the live L2 book: expected fill price (VWAP), slippage (bps), fillable size, and fill-probability estimates. Read-only PAPER simulation — no order is placed.",
         inputSchema: {
@@ -296,22 +179,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const endpointMap: Record<string, string> = {
     stealth_dom: `${GATEWAY}/stealth-dom`,
     airgap_scrub: `${GATEWAY}/airgap-scrub`,
-    rag_shrink: `${GATEWAY}/rag-shrink`,
-    code_denoise: `${GATEWAY}/code-denoise`,
     domain_check: `${GATEWAY}/domain-check`,
     dex_price_summary: `${GATEWAY}/dex-price-summary`,
-    x_sentiment: `${GATEWAY}/x-sentiment`,
     image_ocr_shrink: `${GATEWAY}/image-ocr-shrink`,
-    embed_text: `${GATEWAY}/embed-text`,
-    embed_multilingual: `${GATEWAY}/embed-multilingual`,
-    summarize_text: `${GATEWAY}/summarize`,
     crypto_coverage: `${GATEWAY}/crypto/coverage`,
     crypto_spread_candles: `${GATEWAY}/crypto/spread-candles`,
     crypto_dislocations: `${GATEWAY}/crypto/dislocations`,
     crypto_execution_latency: `${GATEWAY}/crypto/execution-latency`,
-    crypto_shadow_capacity: `${GATEWAY}/crypto/shadow-capacity`,
-    crypto_labeled_dislocations: `${GATEWAY}/crypto/labeled-dislocations`,
-    crypto_attributed_executions: `${GATEWAY}/crypto/attributed-executions`,
     crypto_impact_simulation: `${GATEWAY}/crypto/impact-simulation`,
   };
 
