@@ -9,6 +9,21 @@ file.
 - Published to npm from a GitHub Release; the release tag MUST equal
   `package.json` `version` (guarded in `.github/workflows/publish.yml`).
 
+## [2.0.1] - 2026-10-03
+
+### Fixed
+- **Added the missing `repository` field** (`git+https://github.com/zeromodern/mcp-server-0mod.git`),
+  plus `homepage` and `bugs`, to `package.json`. `npm publish --provenance`
+  (used by `.github/workflows/publish.yml`) requires `repository.url` to
+  resolve to the originating public repo; without it the publish fails with
+  **E422 Unprocessable Entity**. The `v2.0.0` release was tagged before this
+  metadata existed, so the fix ships as a **PATCH** (`v2.0.1`).
+
+### Version
+- **PATCH `2.0.0 → 2.0.1`** — metadata-only fix; no public API / tool-surface
+  change (SemVer Rule 2). `repository`/`homepage`/`bugs` follow the
+  `@zeromodern/eliza-plugin-0mod` convention.
+
 ## [2.0.0] - 2026-09-29
 
 ### Removed (BREAKING)
@@ -45,3 +60,4 @@ file.
 - Added 3 x402 crypto telemetry tools. (Superseded by 2.0.0.)
 
 [2.0.0]: https://github.com/zeromodern/mcp-server-0mod/releases/tag/v2.0.0
+[2.0.1]: https://github.com/zeromodern/mcp-server-0mod/releases/tag/v2.0.1
