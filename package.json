@@ -1,6 +1,6 @@
 {
   "name": "@zeromodern/mcp-server-0mod",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "MCP server wrapping the 0mod API Gateway for any AI agent",
   "main": "build/index.js",
   "type": "module",
@@ -25,6 +25,14 @@
   ],
   "author": "0mod <https://api.0mod.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeromodern/mcp-server-0mod.git"
+  },
+  "homepage": "https://github.com/zeromodern/mcp-server-0mod#readme",
+  "bugs": {
+    "url": "https://github.com/zeromodern/mcp-server-0mod/issues"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.1",
     "@x402/core": "^2.21.0",
