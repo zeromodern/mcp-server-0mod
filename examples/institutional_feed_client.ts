@@ -12,7 +12,7 @@
  *   - crypto_coverage (Free discovery)
  *   - crypto_spread_candles
  *   - crypto_execution_latency
- *   - crypto_shadow_capacity
+ *   - crypto_dislocations
  * Each tool call is automatically settled over HTTP 402 via the client's Base wallet (rates at api.0mod.com).
  *
  * Prerequisites:
@@ -73,16 +73,17 @@ async function runMcpInstitutionalFeed() {
   });
   console.log("Result:", JSON.stringify(latencyResult, null, 2));
 
-  // 4. Call crypto_shadow_capacity
-  console.log("\n[Tool Call] crypto_shadow_capacity...");
-  const capacityResult = await client.callTool({
-    name: "crypto_shadow_capacity",
+  // 4. Call crypto_dislocations
+  console.log("\n[Tool Call] crypto_dislocations...");
+  const dislocResult = await client.callTool({
+    name: "crypto_dislocations",
     arguments: {
+      pair: "AERO/USD",
       date: "2026-09-13",
       time: "1400",
     },
   });
-  console.log("Result:", JSON.stringify(capacityResult, null, 2));
+  console.log("Result:", JSON.stringify(dislocResult, null, 2));
 
   await client.close();
   console.log("\n✓ MCP session closed cleanly.");
