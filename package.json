@@ -3,7 +3,19 @@
   "version": "2.0.1",
   "description": "MCP server wrapping the 0mod API Gateway for any AI agent",
   "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "bin": {
+    "mcp-server-0mod": "./build/index.js"
+  },
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js",
+      "default": "./build/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "build"
   ],
@@ -13,7 +25,8 @@
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
-    "start": "node build/index.js"
+    "start": "node build/index.js",
+    "test": "npm run build && node test/smoke.mjs"
   },
   "keywords": [
     "mcp",
