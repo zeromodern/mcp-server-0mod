@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/@zeromodern/mcp-server-0mod?style=flat-square)](https://www.npmjs.com/package/@zeromodern/mcp-server-0mod) [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=flat-square)](https://www.typescriptlang.org/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
-[Model Context Protocol (MCP)](https://modelcontextprotocol.io) server wrapping the [0mod API Gateway](https://api.0mod.com) edge tools for any AI agent. HTTP 402 micropayments on Base EVM are handled automatically.
+[Model Context Protocol (MCP)](https://modelcontextprotocol.io) server delivering **institutional CEX-DEX crypto arbitrage and real-time execution telemetry** alongside modular edge developer utilities for any AI agent. Per-call micropayments are settled autonomously on Base USDC via HTTP 402.
 
 ## Wallet & Network Prerequisites
 
@@ -63,18 +63,23 @@ See [`examples/institutional_feed_client.ts`](./examples/institutional_feed_clie
 
 > 💡 **Pricing**: Prices below are as listed on the gateway at release time. For live per-call pricing and endpoint status across all tools, visit [api.0mod.com](https://api.0mod.com) or fetch `https://api.0mod.com/api/v1/discovery`.
 
+### Institutional Crypto Telemetry & Execution Analytics
 | Tool Name | Description | Price / call | Input Schema Example |
 | :--- | :--- | :--- | :--- |
-| `stealth_dom` | Headless web page fetch from Cloudflare edge | $0.004 | `{ "url": "https://example.com" }` |
-| `airgap_scrub` | Redact SSN, phone, email, ZIP via Workers AI | $0.004 | `{ "text": "Call me at 555-0199" }` |
-| `domain_check` | Query RDAP registry for domain availability | $0.008 | `{ "domain": "example.com" }` |
-| `dex_price_summary` | Real-time DEX token price, volume, liquidity | $0.0015 | `{ "query": "USDC" }` |
-| `image_ocr_shrink` | Vision OCR text and table extraction | $0.008 | `{ "imageUrl": "https://..." }` |
-| `crypto_coverage` | Check data coverage, supported pairs, and date boundaries | free | `{ "pair": "AERO/USD" }` |
-| `crypto_spread_candles` | Fetch cross-venue CEX-DEX spread candles (OHLC) | $0.015 | `{ "pair": "AERO/USD", "date": "2026-09-14" }` |
-| `crypto_dislocations` | Fetch cross-venue market dislocation and spread arbitrage events | $0.045 | `{ "pair": "AERO/USD", "date": "2026-09-14" }` |
+| `crypto_dislocations` | Cross-venue market dislocation & spread arbitrage events (Coinbase vs Aerodrome) | $0.045 | `{ "pair": "AERO/USD", "date": "2026-09-14" }` |
 | `crypto_execution_latency` | Benchmark cross-venue execution speed, venue latencies, and fill rates | $0.075 | `{ "date": "2026-09-14" }` |
-| `crypto_impact_simulation` | Pre-trade impact simulation against the live L2 book (read-only PAPER, no order placed) | $0.075 | `{ "pair": "AERO/USD", "side": "buy", "size_usd": 5000 }` |
+| `crypto_impact_simulation` | Pre-trade impact simulation against live L2 book (VWAP, slippage, fill ratio) | $0.075 | `{ "pair": "AERO/USD", "side": "buy", "size_usd": 5000 }` |
+| `crypto_spread_candles` | Cross-venue CEX-DEX 15m spread candles (OHLC raw & net bps) | $0.015 | `{ "pair": "AERO/USD", "date": "2026-09-14" }` |
+| `crypto_coverage` | Query active coverage, supported token pairs (13+ pairs), and date boundaries | free | `{ "pair": "AERO/USD" }` |
+
+### Modular Edge Utilities & Developer Tools
+| Tool Name | Description | Price / call | Input Schema Example |
+| :--- | :--- | :--- | :--- |
+| `dex_price_summary` | Real-time DEX token price, volume, liquidity across chains | $0.0015 | `{ "query": "USDC" }` |
+| `stealth_dom` | Headless edge web page fetch (HTML or clean Markdown) | $0.004 | `{ "url": "https://example.com" }` |
+| `airgap_scrub` | Redact SSN, credit cards, phones, emails via Workers AI | $0.004 | `{ "text": "Call me at 555-0199" }` |
+| `domain_check` | Query global RDAP registry for domain availability & nameservers | $0.008 | `{ "domain": "example.com" }` |
+| `image_ocr_shrink` | Vision OCR text and table extraction from images | $0.008 | `{ "imageUrl": "https://..." }` |
 
 ### Crypto Telemetry — Usage Example: `crypto_impact_simulation`
 
