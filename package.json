@@ -1,6 +1,7 @@
 {
   "name": "@zeromodern/mcp-server-0mod",
-  "version": "2.0.1",
+  "mcpName": "io.github.zeromodern/mcp-server-0mod",
+  "version": "2.0.2",
   "description": "MCP server wrapping the 0mod API Gateway for any AI agent",
   "main": "build/index.js",
   "types": "build/index.d.ts",

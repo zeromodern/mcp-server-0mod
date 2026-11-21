@@ -1,0 +1,30 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.zeromodern/mcp-server-0mod",
+  "description": "MCP server for 0mod API Gateway: crypto telemetry & edge utilities via x402.",
+  "websiteUrl": "https://api.0mod.com",
+  "repository": {
+    "url": "https://github.com/zeromodern/mcp-server-0mod",
+    "source": "github"
+  },
+  "version": "2.0.2",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@zeromodern/mcp-server-0mod",
+      "version": "2.0.2",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "description": "Base EVM private key (0x...) for autonomous x402 USDC micropayments (optional for free crypto_coverage tool)",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": true,
+          "name": "PAYER_PRIVATE_KEY"
+        }
+      ]
+    }
+  ]
+}
